@@ -1,6 +1,9 @@
 {
    "name": "Python Dev",
    "image": "mcr.microsoft.com/devcontainers/python:3.12",
+   "mounts": [
+      "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
+   ],
    "customizations": {
       "vscode": {
          "extensions": [
