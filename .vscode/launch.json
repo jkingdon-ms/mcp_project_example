@@ -1,0 +1,30 @@
+{
+   "version": "0.2.0",
+   "configurations": [
+      {
+         "name": "Start API Server",
+         "type": "debugpy",
+         "request": "launch",
+         "module": "openapi_server",
+         "python": "${workspaceFolder}/.venv/bin/python",
+         "cwd": "${workspaceFolder}/api/server",
+         "console": "integratedTerminal"
+      },
+      {
+         "name": "Run API Client Tests",
+         "type": "debugpy",
+         "request": "launch",
+         "module": "pytest",
+         "python": "${workspaceFolder}/.venv/bin/python",
+         "args": [
+            "test/",
+            "-v"
+         ],
+         "cwd": "${workspaceFolder}/api/client",
+         "env": {
+            "PYTHONPATH": "${workspaceFolder}/api/server"
+         },
+         "console": "integratedTerminal"
+      }
+   ]
+}
