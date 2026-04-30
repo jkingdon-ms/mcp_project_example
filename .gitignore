@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Evaluation results
+evaluation/actual.json
+evaluation/output.json
+evaluation/output.png

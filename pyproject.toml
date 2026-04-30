@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp_project_example"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[tool.setuptools]
+packages = ["shared", "shared.api", "shared.model", "evaluation", "mcp_client"]
+
+[tool.setuptools.package-dir]
+"mcp_client" = "mcp/client"
+
+[tool.pyright]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
+baseUrl = "."
+
+[tool.pyright.paths]
+"mcp_client" = ["mcp/client"]

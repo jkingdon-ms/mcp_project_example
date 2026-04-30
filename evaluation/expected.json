@@ -1,0 +1,279 @@
+[
+  {
+    "question_id": 1,
+    "question": "What pets are currently available?",
+    "tool_calls": [
+      {
+        "tool_name": "find_pets_by_status",
+        "tool_arguments": {
+          "status": [
+            "available"
+          ]
+        },
+        "tool_response": {
+          "result": [
+            {
+              "category": {
+                "id": 1,
+                "name": "Dogs"
+              },
+              "id": 1,
+              "name": "Buddy",
+              "photoUrls": [
+                "https://example.com/buddy.jpg"
+              ],
+              "status": "available",
+              "tags": [
+                {
+                  "id": 1,
+                  "name": "friendly"
+                }
+              ]
+            },
+            {
+              "category": {
+                "id": 2,
+                "name": "Cats"
+              },
+              "id": 2,
+              "name": "Whiskers",
+              "photoUrls": [
+                "https://example.com/whiskers.jpg"
+              ],
+              "status": "available",
+              "tags": [
+                {
+                  "id": 2,
+                  "name": "indoor"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "question_id": 2,
+    "question": "Which pets have already been sold?",
+    "tool_calls": [
+      {
+        "tool_name": "find_pets_by_status",
+        "tool_arguments": {
+          "status": [
+            "sold"
+          ]
+        },
+        "tool_response": {
+          "result": [
+            {
+              "category": {
+                "id": 3,
+                "name": "Fish"
+              },
+              "id": 3,
+              "name": "Goldie",
+              "photoUrls": [
+                "https://example.com/goldie.jpg"
+              ],
+              "status": "sold",
+              "tags": []
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "question_id": 3,
+    "question": "Tell me about Buddy.",
+    "tool_calls": [
+      {
+        "tool_name": "find_pets_by_status",
+        "tool_arguments": {
+          "status": [
+            "available",
+            "pending",
+            "sold"
+          ]
+        },
+        "tool_response": {
+          "result": [
+            {
+              "category": {
+                "id": 1,
+                "name": "Dogs"
+              },
+              "id": 1,
+              "name": "Buddy",
+              "photoUrls": [
+                "https://example.com/buddy.jpg"
+              ],
+              "status": "available",
+              "tags": [
+                {
+                  "id": 1,
+                  "name": "friendly"
+                }
+              ]
+            },
+            {
+              "category": {
+                "id": 2,
+                "name": "Cats"
+              },
+              "id": 2,
+              "name": "Whiskers",
+              "photoUrls": [
+                "https://example.com/whiskers.jpg"
+              ],
+              "status": "available",
+              "tags": [
+                {
+                  "id": 2,
+                  "name": "indoor"
+                }
+              ]
+            },
+            {
+              "category": {
+                "id": 3,
+                "name": "Fish"
+              },
+              "id": 3,
+              "name": "Goldie",
+              "photoUrls": [
+                "https://example.com/goldie.jpg"
+              ],
+              "status": "sold",
+              "tags": []
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "question_id": 4,
+    "question": "What cats are available?",
+    "tool_calls": [
+      {
+        "tool_name": "find_pets_by_status",
+        "tool_arguments": {
+          "status": [
+            "available"
+          ]
+        },
+        "tool_response": {
+          "result": [
+            {
+              "category": {
+                "id": 1,
+                "name": "Dogs"
+              },
+              "id": 1,
+              "name": "Buddy",
+              "photoUrls": [
+                "https://example.com/buddy.jpg"
+              ],
+              "status": "available",
+              "tags": [
+                {
+                  "id": 1,
+                  "name": "friendly"
+                }
+              ]
+            },
+            {
+              "category": {
+                "id": 2,
+                "name": "Cats"
+              },
+              "id": 2,
+              "name": "Whiskers",
+              "photoUrls": [
+                "https://example.com/whiskers.jpg"
+              ],
+              "status": "available",
+              "tags": [
+                {
+                  "id": 2,
+                  "name": "indoor"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "question_id": 5,
+    "question": "Any friendly pets available?",
+    "tool_calls": [
+      {
+        "tool_name": "find_pets_by_tags",
+        "tool_arguments": {
+          "tags": [
+            "friendly"
+          ]
+        },
+        "tool_response": {
+          "result": [
+            {
+              "category": {
+                "id": 1,
+                "name": "Dogs"
+              },
+              "id": 1,
+              "name": "Buddy",
+              "photoUrls": [
+                "https://example.com/buddy.jpg"
+              ],
+              "status": "available",
+              "tags": [
+                {
+                  "id": 1,
+                  "name": "friendly"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "question_id": 6,
+    "question": "What is the current store inventory?",
+    "tool_calls": [
+      {
+        "tool_name": "get_inventory",
+        "tool_arguments": {},
+        "tool_response": {
+          "available": 2,
+          "sold": 1
+        }
+      }
+    ]
+  },
+  {
+    "question_id": 7,
+    "question": "Status of Order 1?",
+    "tool_calls": [
+      {
+        "tool_name": "get_order_by_id",
+        "tool_arguments": {
+          "orderId": 1
+        },
+        "tool_response": {
+          "complete": true,
+          "id": 1,
+          "petId": 3,
+          "quantity": 1,
+          "status": "delivered"
+        }
+      }
+    ]
+  }
+]
