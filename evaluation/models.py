@@ -21,18 +21,11 @@ class EvaluationEntry(DataClassJsonMixin):
 
 
 @dataclass
-class ToolCallComparison(DataClassJsonMixin):
-    expected: ToolCall | None
-    actual: ToolCall | None
-    tool_name_match: bool
-    tool_arguments_match: bool
-
-
-@dataclass
 class QuestionComparison(DataClassJsonMixin):
     question_id: int
     question: str
-    tool_call_comparisons: list[ToolCallComparison]
+    expected_tool_calls: list[ToolCall]
+    actual_tool_calls: list[ToolCall]
     correct_tool_count: int
     total_expected_tools: int
     passed: bool = False

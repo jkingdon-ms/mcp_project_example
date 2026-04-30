@@ -46,15 +46,19 @@ class ReportViewer:
         ]
         per_q_arg_acc = []
         for r in question_results:
-            comparisons = r["tool_call_comparisons"]
-            correct_tool_comparisons = [
-                c for c in comparisons if c["tool_name_match"]]
-            if not correct_tool_comparisons:
+            expected = r["expected_tool_calls"]
+            actual = r["actual_tool_calls"]
+            correct_tool_pairs = [
+                (expected[i], actual[i])
+                for i in range(min(len(expected), len(actual)))
+                if expected[i]["tool_name"] == actual[i]["tool_name"]
+            ]
+            if not correct_tool_pairs:
                 per_q_arg_acc.append(0.0)
             else:
                 per_q_arg_acc.append(
-                    sum(1 for c in correct_tool_comparisons if c["tool_arguments_match"]) /
-                    len(correct_tool_comparisons)
+                    sum(1 for e, a in correct_tool_pairs if e["tool_arguments"] == a["tool_arguments"]) /
+                    len(correct_tool_pairs)
                 )
 
         fig = plt.figure(figsize=(14, 14))

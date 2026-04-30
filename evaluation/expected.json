@@ -9,46 +9,6 @@
           "status": [
             "available"
           ]
-        },
-        "tool_response": {
-          "result": [
-            {
-              "category": {
-                "id": 1,
-                "name": "Dogs"
-              },
-              "id": 1,
-              "name": "Buddy",
-              "photoUrls": [
-                "https://example.com/buddy.jpg"
-              ],
-              "status": "available",
-              "tags": [
-                {
-                  "id": 1,
-                  "name": "friendly"
-                }
-              ]
-            },
-            {
-              "category": {
-                "id": 2,
-                "name": "Cats"
-              },
-              "id": 2,
-              "name": "Whiskers",
-              "photoUrls": [
-                "https://example.com/whiskers.jpg"
-              ],
-              "status": "available",
-              "tags": [
-                {
-                  "id": 2,
-                  "name": "indoor"
-                }
-              ]
-            }
-          ]
         }
       }
     ]
@@ -62,23 +22,6 @@
         "tool_arguments": {
           "status": [
             "sold"
-          ]
-        },
-        "tool_response": {
-          "result": [
-            {
-              "category": {
-                "id": 3,
-                "name": "Fish"
-              },
-              "id": 3,
-              "name": "Goldie",
-              "photoUrls": [
-                "https://example.com/goldie.jpg"
-              ],
-              "status": "sold",
-              "tags": []
-            }
           ]
         }
       }
@@ -96,59 +39,6 @@
             "pending",
             "sold"
           ]
-        },
-        "tool_response": {
-          "result": [
-            {
-              "category": {
-                "id": 1,
-                "name": "Dogs"
-              },
-              "id": 1,
-              "name": "Buddy",
-              "photoUrls": [
-                "https://example.com/buddy.jpg"
-              ],
-              "status": "available",
-              "tags": [
-                {
-                  "id": 1,
-                  "name": "friendly"
-                }
-              ]
-            },
-            {
-              "category": {
-                "id": 2,
-                "name": "Cats"
-              },
-              "id": 2,
-              "name": "Whiskers",
-              "photoUrls": [
-                "https://example.com/whiskers.jpg"
-              ],
-              "status": "available",
-              "tags": [
-                {
-                  "id": 2,
-                  "name": "indoor"
-                }
-              ]
-            },
-            {
-              "category": {
-                "id": 3,
-                "name": "Fish"
-              },
-              "id": 3,
-              "name": "Goldie",
-              "photoUrls": [
-                "https://example.com/goldie.jpg"
-              ],
-              "status": "sold",
-              "tags": []
-            }
-          ]
         }
       }
     ]
@@ -162,46 +52,6 @@
         "tool_arguments": {
           "status": [
             "available"
-          ]
-        },
-        "tool_response": {
-          "result": [
-            {
-              "category": {
-                "id": 1,
-                "name": "Dogs"
-              },
-              "id": 1,
-              "name": "Buddy",
-              "photoUrls": [
-                "https://example.com/buddy.jpg"
-              ],
-              "status": "available",
-              "tags": [
-                {
-                  "id": 1,
-                  "name": "friendly"
-                }
-              ]
-            },
-            {
-              "category": {
-                "id": 2,
-                "name": "Cats"
-              },
-              "id": 2,
-              "name": "Whiskers",
-              "photoUrls": [
-                "https://example.com/whiskers.jpg"
-              ],
-              "status": "available",
-              "tags": [
-                {
-                  "id": 2,
-                  "name": "indoor"
-                }
-              ]
-            }
           ]
         }
       }
@@ -217,28 +67,6 @@
           "tags": [
             "friendly"
           ]
-        },
-        "tool_response": {
-          "result": [
-            {
-              "category": {
-                "id": 1,
-                "name": "Dogs"
-              },
-              "id": 1,
-              "name": "Buddy",
-              "photoUrls": [
-                "https://example.com/buddy.jpg"
-              ],
-              "status": "available",
-              "tags": [
-                {
-                  "id": 1,
-                  "name": "friendly"
-                }
-              ]
-            }
-          ]
         }
       }
     ]
@@ -249,11 +77,7 @@
     "tool_calls": [
       {
         "tool_name": "get_inventory",
-        "tool_arguments": {},
-        "tool_response": {
-          "available": 2,
-          "sold": 1
-        }
+        "tool_arguments": {}
       }
     ]
   },
@@ -265,13 +89,29 @@
         "tool_name": "get_order_by_id",
         "tool_arguments": {
           "orderId": 1
-        },
-        "tool_response": {
-          "complete": true,
-          "id": 1,
-          "petId": 3,
-          "quantity": 1,
-          "status": "delivered"
+        }
+      }
+    ]
+  },
+  {
+    "question_id": 8,
+    "question": "Mark Buddy as Sold.",
+    "tool_calls": [
+      {
+        "tool_name": "find_pets_by_status",
+        "tool_arguments": {
+          "status": [
+            "available",
+            "pending",
+            "sold"
+          ]
+        }
+      },
+      {
+        "tool_name": "update_pet_with_form",
+        "tool_arguments": {
+          "petId": 1,
+          "status": "sold"
         }
       }
     ]

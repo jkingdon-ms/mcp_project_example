@@ -138,18 +138,24 @@ class MCPClient:
         messages.append({"role": "user", "content": question})
         tool_calls_made: list[ToolCall] = []
 
-        # First call — may trigger tool use
-        response = self._openai.chat.completions.create(
-            model=self._model,
-            messages=messages,
-            tools=self._available_tools,
-        )
-        response_message = response.choices[0].message
-        messages.append(response_message)
-
-        # Execute any requested tool calls
         assert self._session is not None
-        if response_message.tool_calls:
+
+        # Agentic loop: call model, execute tools, repeat until no tools requested or limit reached
+        MAX_ITERATIONS = 5
+        answer = ""
+        for _ in range(MAX_ITERATIONS):
+            response = self._openai.chat.completions.create(
+                model=self._model,
+                messages=messages,
+                tools=self._available_tools,
+            )
+            response_message = response.choices[0].message
+            messages.append(response_message)
+
+            if not response_message.tool_calls:
+                answer = response_message.content or ""
+                break
+
             for tool_call in response_message.tool_calls:
                 tc = cast(ChatCompletionMessageToolCall, tool_call)
                 function_args = json.loads(tc.function.arguments)
@@ -169,20 +175,6 @@ class MCPClient:
                     "name": tc.function.name,
                     "content": tool_result.content,
                 })
-
-        # Final response incorporating tool results
-        if response_message.tool_calls:
-            final_response = self._openai.chat.completions.create(
-                model=self._model,
-                messages=messages,
-                tools=self._available_tools,
-            )
-            answer = final_response.choices[0].message.content or ""
-        else:
-            answer = response_message.content or ""
-
-        if not self._stateless:
-            self._messages.append({"role": "assistant", "content": answer})
 
         return QuestionResult(nl_answer=answer, tool_calls=tool_calls_made if include_toolcalls else [])
 

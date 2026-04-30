@@ -10,7 +10,6 @@ from models import (
     EvaluationEntry,
     FailureReason,
     QuestionComparison,
-    ToolCallComparison,
 )
 from mcp_client.mcp_client import MCPClient
 import argparse
@@ -23,14 +22,12 @@ from pathlib import Path
 class EvaluationRunner:
     def __init__(
         self,
-        input_file: Path = Path(__file__).parent / "input.json",
         actual_file: Path = Path(__file__).parent / "actual.json",
         expected_file: Path = Path(__file__).parent / "expected.json",
         output_json: Path = Path(__file__).parent / "output.json",
         output_png: Path = Path(__file__).parent / "output.png",
         batch_size: int = 4,
     ) -> None:
-        self.input_file = input_file
         self.actual_file = actual_file
         self.expected_file = expected_file
         self.output_json = output_json
@@ -39,7 +36,7 @@ class EvaluationRunner:
 
     async def _run_question(self, client: MCPClient, item: dict) -> EvaluationEntry:
         question = item["question"]
-        question_id = item["id"]
+        question_id = item["question_id"]
         print(f"Running Q{question_id}: {question!r}")
         result: QuestionResult = await client.process_question(question, include_toolcalls=True)
         return EvaluationEntry(
@@ -50,7 +47,7 @@ class EvaluationRunner:
         )
 
     async def _run_questions(self) -> list[EvaluationEntry]:
-        inputs: list[dict] = json.loads(self.input_file.read_text())
+        inputs: list[dict] = json.loads(self.expected_file.read_text())
         results: list[EvaluationEntry] = []
         async with MCPClient(stateless=True) as client:
             for i in range(0, len(inputs), self.batch_size):
@@ -74,29 +71,20 @@ class EvaluationRunner:
         for exp, act in zip(expected, actual):
             expected_calls = exp.tool_calls
             actual_calls = act.tool_calls
-            comparisons: list[ToolCallComparison] = []
-            correct_tool_count = 0
 
-            for i, exp_tc in enumerate(expected_calls):
-                act_tc = actual_calls[i] if i < len(actual_calls) else None
-                name_match = act_tc is not None and act_tc.tool_name == exp_tc.tool_name
-                args_match = act_tc is not None and act_tc.tool_arguments == exp_tc.tool_arguments
-                if name_match:
-                    correct_tool_count += 1
-                comparisons.append(ToolCallComparison(
-                    expected=exp_tc, actual=act_tc,
-                    tool_name_match=name_match, tool_arguments_match=args_match,
-                ))
-            for act_tc in actual_calls[len(expected_calls):]:
-                comparisons.append(ToolCallComparison(
-                    expected=None, actual=act_tc,
-                    tool_name_match=False, tool_arguments_match=False,
-                ))
-
-            all_names_match = all(c.tool_name_match for c in comparisons) and len(
-                actual_calls) == len(expected_calls)
+            correct_tool_count = sum(
+                1 for i, exp_tc in enumerate(expected_calls)
+                if i < len(actual_calls) and actual_calls[i].tool_name == exp_tc.tool_name
+            )
+            all_names_match = (
+                len(actual_calls) == len(expected_calls) and
+                all(actual_calls[i].tool_name == exp_tc.tool_name
+                    for i, exp_tc in enumerate(expected_calls))
+            )
             all_args_match = all_names_match and all(
-                c.tool_arguments_match for c in comparisons)
+                actual_calls[i].tool_arguments == exp_tc.tool_arguments
+                for i, exp_tc in enumerate(expected_calls)
+            )
             if all_names_match:
                 questions_with_correct_tools += 1
                 if all_args_match:
@@ -113,7 +101,8 @@ class EvaluationRunner:
             comparison = QuestionComparison(
                 question_id=exp.question_id,
                 question=exp.question,
-                tool_call_comparisons=comparisons,
+                expected_tool_calls=expected_calls,
+                actual_tool_calls=actual_calls,
                 correct_tool_count=correct_tool_count,
                 total_expected_tools=len(expected_calls),
                 passed=passed,

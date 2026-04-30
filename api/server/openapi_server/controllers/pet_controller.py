@@ -110,7 +110,7 @@ def update_pet(body):  # noqa: E501
     return body, 200
 
 
-def update_pet_with_form(pet_id, name=None, status=None):  # noqa: E501
+def update_pet_with_form(pet_id, body=None):  # noqa: E501
     """Updates a pet in the store with form data
 
     :param pet_id: ID of pet that needs to be updated
@@ -122,12 +122,10 @@ def update_pet_with_form(pet_id, name=None, status=None):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
+    data = connexion.request.get_json() or {}
+    name = data.get('name')
+    status = data.get('status')
     pet = store.pets.get(pet_id)
-    # connexion 2.x may not unpack formData into kwargs; fall back to request.form
-    if name is None:
-        name = connexion.request.form.get('name')
-    if status is None:
-        status = connexion.request.form.get('status')
     if pet is None:
         return 'Pet not found', 404
     if name is not None:

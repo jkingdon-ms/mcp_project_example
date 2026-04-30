@@ -6,13 +6,14 @@ Run with:
 """
 import argparse
 import asyncio
-import os
-import subprocess
 
+import requests
 import streamlit as st
 
 from mcp_client.mcp_client import MCPClient
 from shared.api.api_server_manager import ApiServerManager
+
+API_BASE = "http://localhost:8080/v2"
 
 st.set_page_config(page_title="Petstore Assistant", page_icon="🐾")
 st.title("🐾 Petstore Assistant")
@@ -34,9 +35,6 @@ def _init() -> tuple[MCPClient, asyncio.AbstractEventLoop]:
     args = _parse_args()
     if args.start_api_server:
         ApiServerManager().start()
-    browser = os.environ.get("BROWSER")
-    if browser:
-        subprocess.Popen([browser, "http://localhost:8501"])
     loop = asyncio.new_event_loop()
     client = MCPClient()
     loop.run_until_complete(client.__aenter__())
@@ -44,6 +42,39 @@ def _init() -> tuple[MCPClient, asyncio.AbstractEventLoop]:
 
 
 _mcp_client, _loop = _init()
+
+
+# ── sidebar data panel ───────────────────────────────────────────────────────
+
+@st.fragment(run_every=5)
+def _data_panel() -> None:
+    # Pets
+    try:
+        pets = []
+        for status in ("available", "pending", "sold"):
+            r = requests.get(f"{API_BASE}/pet/findByStatus",
+                             params={"status": status}, timeout=2)
+            if r.ok:
+                pets.extend(r.json())
+        pets.sort(key=lambda p: p["id"])
+        st.markdown("**Pets**")
+        if pets:
+            st.dataframe(
+                [{"ID": p["id"], "Name": p["name"],
+                  "Category": (p.get("category") or {}).get("name", ""),
+                  "Tags": ", ".join(t["name"] for t in (p.get("tags") or [])),
+                  "Status": p["status"]} for p in pets],
+                width="stretch", hide_index=True,
+            )
+        else:
+            st.caption("No pets found")
+    except Exception:
+        st.caption("⚠️ Pets unavailable")
+
+
+with st.sidebar:
+    st.header("📋 Store Data")
+    _data_panel()
 
 
 # ── session state ────────────────────────────────────────────────────────────

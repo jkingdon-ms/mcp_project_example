@@ -6,7 +6,7 @@ from dataclasses_json import DataClassJsonMixin
 class ToolCall(DataClassJsonMixin):
     tool_name: str
     tool_arguments: dict
-    tool_response: dict
+    tool_response: dict = field(default_factory=dict)
 
 
 @dataclass
