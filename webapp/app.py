@@ -2,9 +2,8 @@
 Streamlit chatbot webapp backed by the MCP client.
 
 Run with:
-    streamlit run webapp/app.py [-- --start-api-server]
+    streamlit run webapp/app.py
 """
-import argparse
 import asyncio
 
 import requests
@@ -22,19 +21,9 @@ st.caption("Ask me anything about the Petstore — pets, orders, and users.")
 
 # ── process-scoped init (runs once per server process) ────────────────────────
 
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--start-api-server", action="store_true",
-                        help="Start the API server automatically")
-    args, _ = parser.parse_known_args()
-    return args
-
-
 @st.cache_resource
 def _init() -> tuple[MCPClient, asyncio.AbstractEventLoop]:
-    args = _parse_args()
-    if args.start_api_server:
-        ApiServerManager().start()
+    ApiServerManager().start()
     loop = asyncio.new_event_loop()
     client = MCPClient()
     loop.run_until_complete(client.__aenter__())

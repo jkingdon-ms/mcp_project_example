@@ -21,10 +21,9 @@ class MCPServer:
         self,
         base_url: str = DEFAULT_BASE_URL,
         spec_path: Path = DEFAULT_SPEC_PATH,
-        start_api_server: bool = False,
         tool_descriptions: ToolDescriptions = CUSTOM_TOOL_DESCRIPTIONS,
     ) -> None:
-        self._api_manager = ApiServerManager() if start_api_server else None
+        self._api_manager = ApiServerManager()
         self._tool_descriptions = tool_descriptions
 
         with open(spec_path) as f:
@@ -61,11 +60,4 @@ class MCPServer:
 
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--start-api-server", action="store_true",
-                        help="Start the API server before running the MCP server")
-    args = parser.parse_args()
-
-    MCPServer(start_api_server=args.start_api_server).run()
+    MCPServer().run()

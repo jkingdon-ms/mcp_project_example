@@ -8,9 +8,7 @@
          "module": "streamlit",
          "args": [
             "run",
-            "app.py",
-            "--",
-            "--start-api-server"
+            "app.py"
          ],
          "python": "${workspaceFolder}/.venv/bin/python",
          "cwd": "${workspaceFolder}/webapp",
@@ -41,9 +39,6 @@
          "request": "launch",
          "program": "${workspaceFolder}/mcp/server/server.py",
          "python": "${workspaceFolder}/.venv/bin/python",
-         "args": [
-            "--start-api-server"
-         ],
          "cwd": "${workspaceFolder}/mcp/server",
          "env": {
             "PYTHONPATH": "${workspaceFolder}"

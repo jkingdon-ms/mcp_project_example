@@ -15,18 +15,24 @@ An end-to-end example showing how to expose a REST API as an **MCP (Model Contex
 az login -t <your-tenant-id>
 ```
 
-3. Add your Azure OpenAI credentials to a `.env` file in the project root (see [Configuration](#configuration)).
+3. Create a `.env` file in the project root with your Azure OpenAI endpoint:
+
+```dotenv
+AZURE_OPENAI_ENDPOINT=https://<your-resource>.openai.azure.com/
+AZURE_OPENAI_MODEL=gpt-4o          # optional, defaults to gpt-4o
+```
+
 4. Run the webapp or evaluation using the terminal (or the VS Code launch configs below):
 
 ```bash
 # Webapp
-streamlit run webapp/app.py -- --start-api-server
+streamlit run webapp/app.py
 
 # Evaluation
 cd evaluation && python run_eval.py
 ```
 
-Both commands start the Petstore REST API server automatically.
+Both commands start the Petstore REST API server automatically — no separate API server process needed.
 
 ### Launch Configs
 
@@ -34,9 +40,9 @@ The project includes VS Code launch configurations (`.vscode/launch.json`) for e
 
 | Configuration | What it does |
 |---|---|
-| **Webapp** | Starts the Streamlit chatbot at `http://localhost:8501` (auto-starts API server) |
-| **Evaluation** | Runs the full evaluation suite with `batch-size=4` (auto-starts API server) |
-| **MCP Server** | Starts the MCP server standalone (auto-starts API server) |
+| **Webapp** | Starts the Streamlit chatbot at `http://localhost:8501` |
+| **Evaluation** | Runs the full evaluation suite with `batch-size=4` |
+| **MCP Server** | Starts the MCP server standalone |
 | **MCP Client** | Runs the MCP client script directly |
 | **API Server** | Starts the Petstore REST API server only |
 | **API Client Tests** | Runs the generated API client test suite with `pytest` |
@@ -173,16 +179,10 @@ Fine-grained per-tool customisation is applied via the `mcp_component_fn` callba
 pip install -r mcp/server/requirements.txt
 ```
 
-**Run** (API server must already be running on port 8080):
+**Run:**
 
 ```bash
 python mcp/server/server.py
-```
-
-**Run and auto-start the API server:**
-
-```bash
-python mcp/server/server.py --start-api-server
 ```
 
 **Customising tool descriptions:**
@@ -223,16 +223,10 @@ A **Streamlit** chatbot that wraps the `MCPClient`. Features:
 pip install -r webapp/requirements.txt
 ```
 
-**Run** (API server must already be running):
+**Run:**
 
 ```bash
 streamlit run webapp/app.py
-```
-
-**Run and auto-start the API server:**
-
-```bash
-streamlit run webapp/app.py -- --start-api-server
 ```
 
 The app will open at `http://localhost:8501`.
