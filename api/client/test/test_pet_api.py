@@ -1,5 +1,6 @@
 # coding: utf-8
 import pytest
+import requests
 import openapi_client
 from openapi_client.api.pet_api import PetApi
 from openapi_client.models.pet import Pet
@@ -94,8 +95,13 @@ def test_update_pet_with_form(pet_api):
     pet = Pet(name="FormPetUnique", photo_urls=[
               "https://example.com/fp.jpg"], status="available")
     created = _add_and_find(pet_api, pet)
-    pet_api.update_pet_with_form(
-        created.id, name="FormPetUpdated", status="pending")
+    # The server accepts JSON for this endpoint; send directly rather than
+    # using the generated client which defaults to application/x-www-form-urlencoded.
+    resp = requests.post(
+        f"{BASE_URL}/pet/{created.id}",
+        json={"name": "FormPetUpdated", "status": "pending"},
+    )
+    assert resp.status_code == 200
     fetched = pet_api.get_pet_by_id(created.id)
     assert fetched.name == "FormPetUpdated"
     assert fetched.status == "pending"
