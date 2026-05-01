@@ -147,11 +147,10 @@ Once running, the full interactive API documentation is available at the Swagger
 http://localhost:8080/v2/ui/
 ```
 
-**Install and run:**
+**Run:**
 
 ```bash
-pip install -r api/server/requirements.txt
-bash api/start_server.sh
+cd api/server && python -m openapi_server
 # Server available at http://localhost:8080/v2/ui/
 ```
 
