@@ -16,6 +16,7 @@ class ToolDescriptions:
 CUSTOM_TOOL_DESCRIPTIONS = ToolDescriptions(descriptions={
     # Comment out any of these descriptions to see the evaluation results when tools are called correctly vs incorrectly.
     # These descriptions help the model choose the right tool for the right question.
+    # For example, commenting out the 'find_pets_by_status' description will usually cause 1 or 2 questions to fail in evaluation.
 
     # ── Pet tools ────────────────────────────────────────────────────────────
     "add_pet": (

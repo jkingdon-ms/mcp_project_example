@@ -29,8 +29,6 @@ class ReportViewer:
     def show(self, report: dict) -> None:
         total = report["total_questions"]
         correct_tools = report["questions_with_correct_tools"]
-        tool_acc = report["overall_tool_accuracy"]  # noqa: F841
-        arg_acc = report["overall_argument_accuracy"]  # noqa: F841
         passing_questions = report["passing_questions"]
         failing_questions = report["failing_questions"]
         # Sort all questions by question_id for consistent x-axis ordering
